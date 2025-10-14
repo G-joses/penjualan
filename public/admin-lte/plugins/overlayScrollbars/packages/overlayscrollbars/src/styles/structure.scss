@@ -1,0 +1,208 @@
+/**
+ * hide native scrollbars
+ * changes to this styles need to be reflected in the environment styles to correctly detect scrollbar hiding
+ */
+[data-overlayscrollbars-initialize]:not([data-overlayscrollbars-viewport]),
+[data-overlayscrollbars-viewport~='scrollbarHidden'],
+html[data-overlayscrollbars-viewport~='scrollbarHidden'] > body {
+  scrollbar-width: none !important;
+}
+[data-overlayscrollbars-initialize]:not([data-overlayscrollbars-viewport])::-webkit-scrollbar,
+[data-overlayscrollbars-initialize]:not(
+    [data-overlayscrollbars-viewport]
+  )::-webkit-scrollbar-corner,
+[data-overlayscrollbars-viewport~='scrollbarHidden']::-webkit-scrollbar,
+[data-overlayscrollbars-viewport~='scrollbarHidden']::-webkit-scrollbar-corner,
+html[data-overlayscrollbars-viewport~='scrollbarHidden'] > body::-webkit-scrollbar,
+html[data-overlayscrollbars-viewport~='scrollbarHidden'] > body::-webkit-scrollbar-corner {
+  appearance: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+// elements won't suddenly clip after initialization is done
+[data-overlayscrollbars-initialize]:not([data-overlayscrollbars]):not(html):not(body) {
+  overflow: auto;
+}
+
+/**
+ * body element
+ */
+html[data-overlayscrollbars-body] {
+  overflow: hidden;
+}
+html[data-overlayscrollbars-body],
+html[data-overlayscrollbars-body] > body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+html[data-overlayscrollbars-body] > body {
+  overflow: visible;
+  margin: 0;
+}
+
+/**
+ * structure setup 
+ */
+[data-overlayscrollbars] {
+  position: relative;
+}
+[data-overlayscrollbars~='host'], // `~="host"` is only needed because `[data-overlayscrollbars]:not([data-overlayscrollbars-viewport])` specificity is too high
+[data-overlayscrollbars-padding] {
+  display: flex;
+  align-items: stretch !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  scroll-behavior: auto !important;
+}
+[data-overlayscrollbars-padding],
+[data-overlayscrollbars-viewport]:not([data-overlayscrollbars]) {
+  box-sizing: inherit;
+  position: relative; // needed for correct padding styles
+  flex: auto;
+  height: auto;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  z-index: 0;
+}
+[data-overlayscrollbars-viewport] {
+  &:not([data-overlayscrollbars]) {
+    --os-vaw: 0;
+    --os-vah: 0;
+    outline: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &[data-overlayscrollbars-viewport~='arrange']::before {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+    min-width: 1px;
+    min-height: 1px;
+    width: var(--os-vaw);
+    height: var(--os-vah);
+  }
+}
+
+/**
+ * wrapper elements overflow:
+ */
+[data-overlayscrollbars~='host'],
+[data-overlayscrollbars-padding] {
+  overflow: hidden !important;
+}
+[data-overlayscrollbars~='host'][data-overlayscrollbars~='noClipping'],
+[data-overlayscrollbars-padding~='noClipping'] {
+  overflow: visible !important;
+}
+
+/**
+ * viewport overflow:
+ */
+[data-overlayscrollbars-viewport] {
+  --os-viewport-overflow-x: hidden;
+  --os-viewport-overflow-y: hidden;
+
+  overflow-x: var(--os-viewport-overflow-x);
+  overflow-y: var(--os-viewport-overflow-y);
+}
+[data-overlayscrollbars-viewport~='overflowXVisible'] {
+  --os-viewport-overflow-x: visible;
+}
+[data-overlayscrollbars-viewport~='overflowXHidden'] {
+  --os-viewport-overflow-x: hidden;
+}
+[data-overlayscrollbars-viewport~='overflowXScroll'] {
+  --os-viewport-overflow-x: scroll;
+}
+[data-overlayscrollbars-viewport~='overflowYVisible'] {
+  --os-viewport-overflow-y: visible;
+}
+[data-overlayscrollbars-viewport~='overflowYHidden'] {
+  --os-viewport-overflow-y: hidden;
+}
+[data-overlayscrollbars-viewport~='overflowYScroll'] {
+  --os-viewport-overflow-y: scroll;
+}
+// helper selector for consumers
+[data-overlayscrollbars-viewport~='overflowImportant'] {
+  overflow-x: var(--os-viewport-overflow-x) !important;
+  overflow-y: var(--os-viewport-overflow-y) !important;
+}
+
+/**
+ * viewport state modifiers:
+ */
+// use `:not(#osFakeId)` to increase specificity
+[data-overlayscrollbars-viewport~='noContent']:not(#osFakeId) {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+[data-overlayscrollbars-viewport~='noContent']:not(#osFakeId)::before,
+[data-overlayscrollbars-viewport~='noContent']:not(#osFakeId)::after,
+[data-overlayscrollbars-viewport~='noContent']:not(#osFakeId) > * {
+  display: none !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border-width: 0 !important;
+}
+// measuring mode does ensure no scroll snap and a clipped overflow (no overflow-visible) on any axis
+// scrolling mode ensure no scroll snap
+[data-overlayscrollbars-viewport~='measuring'],
+[data-overlayscrollbars-viewport~='scrolling'] {
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+}
+[data-overlayscrollbars-viewport~='measuring'][data-overlayscrollbars-viewport~='overflowXVisible'] {
+  overflow-x: hidden !important;
+}
+[data-overlayscrollbars-viewport~='measuring'][data-overlayscrollbars-viewport~='overflowYVisible'] {
+  overflow-y: hidden !important;
+}
+
+/**
+ * content element:
+ */
+[data-overlayscrollbars-content] {
+  box-sizing: inherit;
+}
+
+/**
+ * Display contents to bridge any flickering during deferred initialization.
+ */
+[data-overlayscrollbars-contents]:not(#osFakeId):not([data-overlayscrollbars-padding]):not(
+    [data-overlayscrollbars-viewport]
+  ):not([data-overlayscrollbars-content]) {
+  display: contents;
+}
+
+/**
+ * optional & experimental grid mode
+ */
+[data-overlayscrollbars-grid],
+[data-overlayscrollbars-grid] [data-overlayscrollbars-padding] {
+  display: grid;
+  grid-template: 1fr / 1fr;
+}
+[data-overlayscrollbars-grid] > [data-overlayscrollbars-padding],
+[data-overlayscrollbars-grid] > [data-overlayscrollbars-viewport],
+[data-overlayscrollbars-grid]
+  > [data-overlayscrollbars-padding]
+  > [data-overlayscrollbars-viewport] {
+  height: auto !important;
+  width: auto !important;
+}

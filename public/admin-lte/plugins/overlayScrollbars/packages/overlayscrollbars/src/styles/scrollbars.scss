@@ -1,0 +1,159 @@
+@property --os-scroll-percent {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+@property --os-viewport-percent {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+.os-scrollbar {
+  // The viewport size percentage of the scrollbar axis in the range 0..1
+  --os-viewport-percent: 0;
+  // The scroll percentage of the scrollbar axis in the range 0..1
+  --os-scroll-percent: 0;
+  // The scroll direction of the scrollbar axis. `0` represents the default scroll direction and `1` represents a non-default scroll direction
+  --os-scroll-direction: 0;
+  // The direction aware scroll percentage of the scrollbar axis. The range for default scroll directions is 0..1 and for non default 1 - (0..1).
+  --os-scroll-percent-directional: calc(
+    var(--os-scroll-percent) - (var(--os-scroll-percent) + (1 - var(--os-scroll-percent)) * -1) *
+      var(--os-scroll-direction)
+  );
+}
+.os-scrollbar {
+  contain: size layout;
+  contain: size layout style;
+  transition: opacity 0.15s, visibility 0.15s, top 0.15s, right 0.15s, bottom 0.15s, left 0.15s;
+  pointer-events: none;
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+}
+body > .os-scrollbar {
+  position: fixed;
+  z-index: 99999;
+}
+.os-scrollbar-transitionless {
+  transition: none !important;
+}
+.os-scrollbar-track {
+  position: relative;
+  padding: 0 !important;
+  border: none !important;
+}
+.os-scrollbar-handle {
+  position: absolute;
+}
+.os-scrollbar-track,
+.os-scrollbar-handle {
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+.os-scrollbar.os-scrollbar-track-interactive .os-scrollbar-track,
+.os-scrollbar.os-scrollbar-handle-interactive .os-scrollbar-handle {
+  pointer-events: auto;
+  touch-action: none;
+}
+.os-scrollbar-horizontal {
+  bottom: 0;
+  left: 0;
+}
+.os-scrollbar-vertical {
+  top: 0;
+  right: 0;
+}
+.os-scrollbar-rtl.os-scrollbar-horizontal {
+  right: 0;
+}
+.os-scrollbar-rtl.os-scrollbar-vertical {
+  right: auto;
+  left: 0;
+}
+// classname when the scrollbars is visible due to the `visibility` option
+.os-scrollbar-visible {
+  opacity: 1;
+  visibility: visible;
+}
+// classname for auto-hiding the scrollbars due to the `autoHide` option
+.os-scrollbar-auto-hide.os-scrollbar-auto-hide-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+// classname for overriding auto-hiding if the user is interacting with the scrollbar directly (hovering etc.)
+.os-scrollbar-interaction.os-scrollbar-visible {
+  opacity: 1;
+  visibility: visible;
+}
+.os-scrollbar-unusable,
+.os-scrollbar-unusable *,
+.os-scrollbar-wheel,
+.os-scrollbar-wheel * {
+  pointer-events: none !important;
+}
+.os-scrollbar-unusable .os-scrollbar-handle {
+  opacity: 0 !important;
+  // dont do any transitions anymore when unusable
+  // especially no opacity and visibility transitions to prevent full size handles remaining visible for the duration of the transition
+  transition: none !important;
+}
+.os-scrollbar-horizontal .os-scrollbar-handle {
+  bottom: 0;
+  left: calc(var(--os-scroll-percent-directional) * 100%);
+  transform: translateX(calc(var(--os-scroll-percent-directional) * -100%));
+  width: calc(var(--os-viewport-percent) * 100%);
+}
+.os-scrollbar-vertical .os-scrollbar-handle {
+  right: 0;
+  top: calc(var(--os-scroll-percent-directional) * 100%);
+  transform: translateY(calc(var(--os-scroll-percent-directional) * -100%));
+  height: calc(var(--os-viewport-percent) * 100%);
+}
+@supports (container-type: size) {
+  .os-scrollbar-track {
+    container-type: size;
+  }
+  .os-scrollbar-horizontal .os-scrollbar-handle {
+    left: auto;
+    transform: translateX(
+      calc(
+        (var(--os-scroll-percent-directional) * 100cqw) +
+          (var(--os-scroll-percent-directional) * -100%)
+      )
+    );
+  }
+  .os-scrollbar-vertical .os-scrollbar-handle {
+    top: auto;
+    transform: translateY(
+      calc(
+        (var(--os-scroll-percent-directional) * 100cqh) +
+          (var(--os-scroll-percent-directional) * -100%)
+      )
+    );
+  }
+  .os-scrollbar-rtl.os-scrollbar-horizontal .os-scrollbar-handle {
+    right: auto;
+    left: 0;
+  }
+}
+.os-scrollbar-rtl.os-scrollbar-vertical .os-scrollbar-handle {
+  right: auto;
+  left: 0;
+}
+.os-scrollbar.os-scrollbar-horizontal.os-scrollbar-cornerless,
+.os-scrollbar.os-scrollbar-horizontal.os-scrollbar-cornerless.os-scrollbar-rtl {
+  left: 0;
+  right: 0;
+}
+.os-scrollbar.os-scrollbar-vertical.os-scrollbar-cornerless,
+.os-scrollbar.os-scrollbar-vertical.os-scrollbar-cornerless.os-scrollbar-rtl {
+  top: 0;
+  bottom: 0;
+}
+
+@media print {
+  .os-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "name": "overlayscrollbars",
+  "private": true,
+  "type": "module",
+  "version": "2.12.1",
+  "description": "A javascript scrollbar plugin that hides the native scrollbars, provides custom styleable overlay scrollbars, and preserves the native functionality and feel.",
+  "author": "Rene Haas | KingSora",
+  "license": "MIT",
+  "homepage": "https://kingsora.github.io/OverlayScrollbars",
+  "bugs": "https://github.com/KingSora/OverlayScrollbars/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KingSora/OverlayScrollbars.git",
+    "directory": "packages/overlayscrollbars"
+  },
+  "keywords": [
+    "overlayscrollbars",
+    "custom",
+    "styleable",
+    "scrollbar",
+    "scrollbars",
+    "scroll",
+    "frontend",
+    "browser"
+  ],
+  "files": [
+    "src",
+    "dist",
+    "types",
+    "styles",
+    "README.md"
+  ],
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
+      },
+      "require": {
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
+      },
+      "default": {
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
+      }
+    },
+    "./overlayscrollbars.scss": "./src/index.scss"
+  },
+  "sideEffects": [
+    "*.css",
+    "*.scss",
+    "*.sass"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup-plugin-filesize": "^10.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "types": "tsc --emitDeclarationOnly -p tsconfig.types.json",
+    "test": "vitest run --coverage",
+    "test:dev": "vitest --coverage",
+    "e2e": "playwright test",
+    "e2e:dev": "playwright test --workers 1 --timeout 0 --global-timeout 0",
+    "vitest:node": "vitest run --coverage --project node",
+    "vitest:dom": "vitest run --coverage --project dom",
+    "posttest": "playwright-merge-coverage && full-coverage",
+    "postjest": "full-coverage",
+    "poste2e": "playwright-merge-coverage && full-coverage"
+  }
+}

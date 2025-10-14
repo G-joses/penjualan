@@ -1,0 +1,66 @@
+{
+  "name": "overlayscrollbars-ngx",
+  "private": true,
+  "version": "0.5.2",
+  "description": "OverlayScrollbars for Angular.",
+  "author": "Rene Haas | KingSora",
+  "license": "MIT",
+  "homepage": "https://kingsora.github.io/OverlayScrollbars",
+  "bugs": "https://github.com/KingSora/OverlayScrollbars/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KingSora/OverlayScrollbars.git",
+    "directory": "packages/overlayscrollbars-ngx"
+  },
+  "keywords": [
+    "overlayscrollbars",
+    "angular",
+    "angular2",
+    "ngx",
+    "component",
+    "directive",
+    "styleable",
+    "custom",
+    "scrollbar",
+    "scrollbars",
+    "scroll"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=13.0.0",
+    "@angular/core": ">=13.0.0",
+    "overlayscrollbars": "^2.0.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^13.0.0",
+    "@angular/animations": "^13.0.0",
+    "@angular/cli": "^13.0.0",
+    "@angular/common": "^13.0.0",
+    "@angular/compiler": "^13.0.0",
+    "@angular/compiler-cli": "^13.0.0",
+    "@angular/core": "^13.0.0",
+    "@angular/forms": "^13.0.0",
+    "@angular/platform-browser": "^13.0.0",
+    "@angular/platform-browser-dynamic": "^13.0.0",
+    "@angular/router": "^13.0.0",
+    "@types/jasmine": "~4.0.0",
+    "jasmine-core": "~4.3.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "ng-packagr": "^13.0.0",
+    "overlayscrollbars": "file:./../overlayscrollbars/dist",
+    "rxjs": "^7.4.0",
+    "typescript": ">=4.4.2 <4.7",
+    "zone.js": "~0.11.4"
+  },
+  "dependencies": {
+    "tslib": "^2.4.0"
+  },
+  "scripts": {
+    "build": "ng build overlayscrollbars-ngx",
+    "test": "ng test --watch=false --sourceMap=false --browsers=ChromeHeadlessCI --code-coverage"
+  },
+  "sideEffects": false
+}

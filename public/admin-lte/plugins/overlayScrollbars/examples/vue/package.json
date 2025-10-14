@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "overlayscrollbars": "file:../../packages/overlayscrollbars/dist",
+    "overlayscrollbars-vue": "file:../../packages/overlayscrollbars-vue/dist",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/tsconfig": "^0.5.1",
+    "typescript": "^5.0.2",
+    "vite": "^5.2.11",
+    "vue-tsc": "^1.8.25"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview --port 4173",
+    "build-only": "vite build --base /OverlayScrollbars/example/vue",
+    "type-check": "vue-tsc --noEmit"
+  }
+}

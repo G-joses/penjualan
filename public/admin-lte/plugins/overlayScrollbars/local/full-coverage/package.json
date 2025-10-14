@@ -1,0 +1,12 @@
+{
+  "name": "@~local/full-coverage",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "full-coverage": "./bin/generateFullCoverage.js"
+  },
+  "dependencies": {
+    "nyc": "^15.1.0"
+  },
+  "version": "0.0.0"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@~local/rollup",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-virtual": "^3.0.1",
+    "autoprefixer": "^10.4.7",
+    "cssnano": "^5.1.12",
+    "glob": "^7.1.6",
+    "postcss": "^8.4.14",
+    "rollup-plugin-dts": "^5.3.1",
+    "rollup-plugin-esbuild-resolve": "^1.0.0",
+    "rollup-plugin-ignore-import": "^1.3.2",
+    "rollup-plugin-license": "^3.2.0",
+    "rollup-plugin-scss": "^3.0.0",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
+    "rollup-plugin-typescript2": "^0.32.1"
+  },
+  "exports": {
+    ".": "./src/createRollupConfig.js",
+    "./plugin/rollupCopyPlugin": "./src/plugins/rollupCopyPlugin.js",
+    "./plugin/rollupPackageJsonPlugin": "./src/plugins/rollupPackageJsonPlugin.js"
+  },
+  "version": "0.0.0"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@~local/esbuild",
+  "private": true,
+  "sideEffects": false,
+  "main": "src/esbuild.js",
+  "type": "module"
+}

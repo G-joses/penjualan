@@ -1,0 +1,7 @@
+{
+  "extends": "@~local/tsconfig",
+  "compilerOptions": {
+    "types": ["node"],
+  },
+  "exclude": ["dist"]
+}

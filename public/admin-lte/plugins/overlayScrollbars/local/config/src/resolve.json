@@ -1,0 +1,10 @@
+{
+  "extensions": [".tsx", ".ts", ".jsx", ".js", ".json"],
+  "styleExtensions": [".css", ".scss", ".sass"],
+  "directories": ["node_modules"],
+  "paths": {
+    "rollupTypes": {
+      "~/*": ["<typesDir>/*"]
+    }
+  }
+}

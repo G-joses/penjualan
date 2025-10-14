@@ -1,0 +1,52 @@
+{
+  "name": "overlayscrollbars-vue",
+  "private": true,
+  "type": "module",
+  "version": "0.5.9",
+  "description": "OverlayScrollbars for Vue.",
+  "author": "Rene Haas | KingSora",
+  "license": "MIT",
+  "homepage": "https://kingsora.github.io/OverlayScrollbars",
+  "bugs": "https://github.com/KingSora/OverlayScrollbars/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KingSora/OverlayScrollbars.git",
+    "directory": "packages/overlayscrollbars-vue"
+  },
+  "keywords": [
+    "overlayscrollbars",
+    "vue",
+    "vue2",
+    "vue3",
+    "component",
+    "composable",
+    "composition",
+    "styleable",
+    "custom",
+    "scrollbar",
+    "scrollbars",
+    "scroll"
+  ],
+  "main": "./src/overlayscrollbars-vue.ts",
+  "module": "./src/overlayscrollbars-vue.ts",
+  "types": "./src/overlayscrollbars-vue.ts",
+  "peerDependencies": {
+    "vue": "^3.2.25",
+    "overlayscrollbars": "^2.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/vue": "^8.1.0",
+    "@vitejs/plugin-vue": "^4.5.2",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/tsconfig": "^0.4.0",
+    "overlayscrollbars": "file:./../overlayscrollbars/dist",
+    "vue": "~3.2.45",
+    "vue-tsc": "^2.0.29"
+  },
+  "scripts": {
+    "build": "run-p build-js build-types",
+    "build-js": "vite build",
+    "build-types": "vue-tsc --emitDeclarationOnly -p tsconfig.types.json --composite false",
+    "test": "vitest run --coverage"
+  }
+}

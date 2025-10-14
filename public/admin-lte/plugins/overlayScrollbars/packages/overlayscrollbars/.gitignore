@@ -1,0 +1,11 @@
+# Compiled output
+/dist
+
+# Tests generated output
+.build/
+.fixtures/
+.playwright/
+
+# Node
+/node_modules
+

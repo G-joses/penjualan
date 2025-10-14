@@ -1,0 +1,82 @@
+* {
+  scroll-behavior: smooth;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+#controls {
+  flex: none;
+}
+#stage {
+  flex: auto;
+  position: relative;
+
+  & > div {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: lightgoldenrodyellow;
+  }
+}
+
+#wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+#targetRTL {
+  direction: rtl;
+}
+
+.target {
+  width: 350px;
+  height: 350px;
+  padding: 100px;
+}
+.viewport {
+  scroll-snap-type: both mandatory;
+  overscroll-behavior: contain contain;
+}
+.viewport {
+  display: grid;
+  gap: 60px;
+  box-sizing: border-box;
+  border: 1px solid;
+  grid-template-columns: repeat(5, 1fr);
+  background: conic-gradient(
+    at bottom left,
+    red 0deg,
+    yellow 15deg,
+    green 30deg,
+    blue 45deg,
+    purple 60deg,
+    magenta 75deg
+  );
+  background-attachment: local;
+  margin: auto;
+}
+.item {
+  scroll-snap-align: center center;
+  height: 210px;
+  width: 210px;
+  outline: 3px inset;
+  list-style-type: none;
+  background: white;
+  font-family: monospace;
+  font-size: 3rem;
+  line-height: 210px;
+  text-align: center;
+  counter-increment: items 1;
+}
+.item::after {
+  content: counter(items);
+}
+input {
+  vertical-align: bottom;
+}
+p {
+  font-family: monospace;
+}
