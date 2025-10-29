@@ -8,7 +8,7 @@
         <div>
             <div>
                 <div class="card-body">
-                    <a href="{{ route('category.create') }}" class="btn btn-md btn-success mb-3">Tambah Kategori Baru</a>
+                    <a href="{{ route('category.create') }}" class="btn btn-md btn-primary mb-3">+ Tambah Kategori Baru</a>
                     <table class="table table-bordered">
                         <thead>
                             <tr>

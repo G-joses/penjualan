@@ -9,10 +9,15 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['invoice', 'total', 'payment', 'change_amount'];
+    protected $fillable = ['invoice', 'customer_name', 'total', 'payment', 'change_amount', 'subtotal', 'tax', 'discount'];
 
     public function details()
     {
         return $this->hasMany(TransactionDetail::class);
+    }
+
+    public function getItemIds()
+    {
+        return $this->items->pluck('id');
     }
 }

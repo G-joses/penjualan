@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>@yield('title', 'Aplikasi Penjualan')</title>
+    <title>@yield('title', 'Toko Jologo')</title>
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <meta name="color-scheme" content="light dark" />
@@ -81,7 +81,9 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="{{ route('dashboard') }}" class="nav-link">Home</a></li>
+                    @if(auth()->user()->role == 'admin')
+                    <li class="nav-item d-none d-md-block"><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
+                    @endif
                 </ul>
                 <!--end::Start Navbar Links-->
                 <!--begin::End Navbar Links-->
@@ -102,27 +104,48 @@
                     </li>
                     <!--end::Fullscreen Toggle-->
                     <!--begin::User Menu Dropdown-->
+                    @if(auth()->user()->role == 'admin')
+                    <a class="nav-link ">
+                        <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+                    </a>
+                    @endif
+                    <!--begin::User Menu Dropdown-->
+                    @if(auth()->user()->role == 'kasir')
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <span class="d-none d-md-inline">Admin</span>
+                            <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
                                 <p>
-                                    Admin - Admin Web
-                                    <small>Admin since Nov. 2025</small>
+                                    {{ auth()->user()->name }}
+                                </p>
+                                <p>
+                                    {{ auth()->user()->role }}
                                 </p>
                             </li>
                             <!--end::User Image-->
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                                <a href="{{ route('user.profile') }}" class="btn btn-default btn-flat float-end"><i class="bi bi-person"></i>Profil Saya</a>
                             </li>
                             <!--end::Menu Footer-->
                         </ul>
                     </li>
+                    @endif
                     <!--end::User Menu Dropdown-->
+                    <!--begin::Logout-->
+                    <li class="nav-item">
+                        <form action="{{ route('logout') }}" method="POST" class="nav-link p-0 m-0 border-0 bg-transparent">
+                            @csrf
+                            <button type="submit" class="btn btn-link nav-link p-0 text-danger">
+                                <i class="nav-icon bi bi-power"></i>
+                                <p>Keluar</p>
+                            </button>
+                        </form>
+                    </li>
+                    <!--end::Logout-->
                 </ul>
                 <!--end::End Navbar Links-->
             </div>
@@ -134,7 +157,7 @@
             <!--begin::Sidebar Brand-->
             <div class="sidebar-brand">
                 <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
+                <a class="brand-link">
                     <!--begin::Brand Image-->
                     <i class="nav-icon bi bi-cart4"></i>
                     <!--end::Brand Image-->
@@ -156,6 +179,7 @@
                         aria-label="Main navigation"
                         data-accordion="false"
                         id="navigation">
+                        <!--begin::Sidebar Admin-->
                         <li class="nav-header">BARANG</li>
                         <li class="nav-item">
                             <a href="{{ route('products.index') }}" class="nav-link">
@@ -163,26 +187,37 @@
                                 <p>Data Barang</p>
                             </a>
                         </li>
+                        @if(auth()->user()->role == 'admin')
                         <li class="nav-item">
                             <a href="{{ route('category.index') }}" class="nav-link">
                                 <i class="nav-icon bi bi-card-list"></i>
                                 <p>Kategori Barang</p>
                             </a>
                         </li>
+                        @endif
                         <li class="nav-header">TRANSAKSI</li>
                         <li class="nav-item">
                             <a href="{{ route('kasir.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-cash"></i>
+                                <i class="nav-icon bi bi-cart-check"></i>
                                 <p>Kasir</p>
                             </a>
                         </li>
+                        @if(auth()->user()->role == 'admin')
                         <li class="nav-item">
                             <a href="{{ route('laporan.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-graph-up"></i>
-                                <p>Laporan Penjualan</p>
+                                <i class="nav-icon bi bi-receipt"></i>
+                                <p>Daftar Transaksi</p>
                             </a>
                         </li>
-
+                        <li class="nav-header">MANAJEMEN PENGGUNA</li>
+                        <li class="nav-item">
+                            <a href="{{ route('users.index') }}" class="nav-link">
+                                <i class="nav-icon bi bi-people"></i>
+                                <p>User</p>
+                            </a>
+                        </li>
+                        @endif
+                        <!--end::Sidebar admin-->
                     </ul>
                     <!--end::Sidebar Menu-->
                 </nav>

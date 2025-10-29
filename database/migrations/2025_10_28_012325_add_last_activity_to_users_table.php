@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 100); // nama kategori
-            $table->text('description')->nullable(); // deskripsi kategori (opsional)
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('last_activity')->nullable()->after('current_device');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('last_activity');
+        });
     }
 };

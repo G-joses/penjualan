@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaction_details', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('kasir');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaction_details');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
+        });
     }
 };

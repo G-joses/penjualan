@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -20,6 +21,9 @@ class CategoryController extends Controller
     public function index(): View
     {
         $category = Category::latest()->paginate(5);
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
         return view('category.category', compact('category'));
     }
 
@@ -31,6 +35,9 @@ class CategoryController extends Controller
 
     public function create(): View
     {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
         return view('category.create');
     }
 
@@ -55,6 +62,9 @@ class CategoryController extends Controller
         ]);
 
         //redirect to index
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
         return redirect()->route('category.index')->with(['success' => 'Data Berhasil Disimpan']);
     }
 
@@ -67,7 +77,9 @@ class CategoryController extends Controller
     public function edit(string $id): View
     {
         $category = Category::findOrFail($id);
-
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
         return view('category.edit', compact('category'));
     }
 
@@ -90,7 +102,9 @@ class CategoryController extends Controller
             'name' => $request->name,
             'description' => $request->description,
         ]);
-
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
         return redirect()->route('category.index')->with(['success' => 'Data Berhasil Diganti']);
     }
 
@@ -104,6 +118,9 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $category->delete();
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus');
     }
 }

@@ -29,13 +29,35 @@ class KasirController extends Controller
     {
         $cart = $request->cart;
         $payment = $request->payment;
+        $tax = $request->tax ?? 0;
+        $discount = $request->discount ?? 0;
+        $customer_name = $request->customer_name ?? 'Pelanggan';
 
-        // Hitung total harga
-        $total = collect($cart)->sum(fn($item) => $item['price'] * $item['qty']);
+        // Hitung Subtotal
+        $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['qty']);
+
+        // Hitung Pajak
+        $tax_amount = ($subtotal * $tax) / 100;
+
+        // Hitung Total setelah diskon dan pajak
+
+        $total = $subtotal - $discount + $tax_amount;
+
+        // Validasi pembayaran
+        if ($payment < $total) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pembayaran Kurang !'
+            ]);
+        }
 
         // Simpan data transaksi utama
         $transaction = Transaction::create([
             'invoice' => 'INV-' . time(),
+            'customer_name' => $customer_name,
+            'subtotal' => $subtotal,
+            'tax' => $tax_amount,
+            'discount' => $discount,
             'total' => $total,
             'payment' => $payment,
             'change_amount' => $payment - $total

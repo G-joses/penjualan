@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 14, 2025 at 12:34 PM
+-- Generation Time: Oct 29, 2025 at 01:44 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -145,7 +145,13 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2025_10_04_061809_create_sessions_table', 3),
 (9, '2025_10_09_035433_create_categories_table', 4),
 (10, '2025_10_12_063953_create_transactions_table', 5),
-(11, '2025_10_12_064035_create_transactions_details_table', 6);
+(11, '2025_10_12_064035_create_transactions_details_table', 6),
+(12, '2025_10_16_041932_add_role_to_users_table', 7),
+(13, '2025_10_21_025708_add_tax_discount_to_transactions_table', 8),
+(14, '2025_10_22_014120_add_discount_to_products_table', 9),
+(15, '2025_10_24_010555_add_session_fields_to_users_table', 10),
+(16, '2025_10_28_012325_add_last_activity_to_users_table', 11),
+(17, '2025_10_29_011614_add_customer_name_to_transactions_table', 12);
 
 -- --------------------------------------------------------
 
@@ -162,19 +168,21 @@ CREATE TABLE `products` (
   `price` decimal(12,2) NOT NULL,
   `stock` int NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `discount` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'Diskon dalam persen',
+  `discount_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT 'Diskon nominal',
+  `has_discount` tinyint(1) NOT NULL DEFAULT '0',
+  `final_price` decimal(12,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `category_id`, `image`, `name`, `description`, `price`, `stock`, `created_at`, `updated_at`) VALUES
-(11, 2, 'n9MQ75YmxxLl8zzheJi5yNzFfis8j5Qdn92no1XI.png', 'Logo G v1.1', '<p>Desain logo huruf g versi 1.1</p>', 10000.00, 4, '2025-10-11 00:33:02', '2025-10-12 22:15:13'),
-(12, 2, 'MMFgmazM51r8pZGjtFHFX4VuCPPkHXp4C39iZb5G.jpg', 'Vector Wajah', '<p>asdasdasdasdasdas</p>', 20000.00, 15, '2025-10-12 20:48:26', '2025-10-12 22:32:25'),
-(13, 2, 'FxYddfSEcoaHpvaXiAhCb1I6cYqgIYqv3GF6y0Pq.jpg', 'logo sosmed', '<p>asdsadasdasdasdasd</p>', 20000.00, 17, '2025-10-12 20:49:07', '2025-10-12 22:03:29'),
-(14, 2, 're4V2vr3vo4S6dMJw9fh2JcRMGawGhkF2ICUxxRH.png', '2 logo', '<p>asdasdasdasdd</p>', 50000.00, 10, '2025-10-12 20:50:15', '2025-10-12 20:50:15'),
-(15, 2, 'j7yjN66UD9aSRJSqo24RAQeGUX4oawAgDnxDTxwv.png', 'Desain Logo 1', '<p>asdasdghytkyukfgd</p>', 14000.00, 19, '2025-10-12 20:50:55', '2025-10-12 22:02:55');
+INSERT INTO `products` (`id`, `category_id`, `image`, `name`, `description`, `price`, `stock`, `created_at`, `updated_at`, `discount`, `discount_amount`, `has_discount`, `final_price`) VALUES
+(17, 2, '2KPALj8HSne8w6uOvZtxAhzYDGebPX2CpCzHA1im.png', 'Infografik', '<p>infografik yang menampilkan informasi&nbsp;</p>', 50000.00, 94, '2025-10-21 19:34:47', '2025-10-28 18:35:46', 10.00, 0.00, 1, 45000.00),
+(18, 2, 'sUM7qnjqDhoPoVZHSBniEDidvZiZVO4bSyfnY7n9.png', 'Logo 1', '<p>logo punya fael</p>', 40000.00, 99, '2025-10-21 19:36:58', '2025-10-23 23:01:52', 10.00, 0.00, 1, 36000.00),
+(19, 2, 'k2QuwiT34BqrY3BhWyz3GdB2Bf5Wy9GW2haZzg7r.png', 'logo G', '<p>asdasdasdasd</p>', 1000000.00, 100, '2025-10-21 20:12:18', '2025-10-21 20:12:48', 0.00, 0.00, 0, 1000000.00);
 
 -- --------------------------------------------------------
 
@@ -196,12 +204,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('0BuyRlSGWce3FuOFnJ8yKCfAxCPMDZf5ErVDBBUm', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiU25rQUs2RHZ6QUw4T29acmZCenpQajNxekc1bENMUG40MFRrUkhVUCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9wZW5qdWFsYW4udGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760186142),
-('4BQm0C5tJEQZIrsILWFMtJlbPTcfQungDJBpYJX0', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiajIxZ1k2U2VaTmtEek5tOXpZd0JTWlhsRHhPZFVJYXNoZW1EbFFpRiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9sYXBvcmFuIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1760341560),
-('6nSbmkLgutPhNtQFvjd6twMYSVa3kkahjvSMm8e0', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNzVKblB4N05QZFM0UFVndm8wZW5xcWNEZXBtRXRQUjdOblQ3WDE4ViI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9wZW5qdWFsYW4udGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760169776),
-('LbZVHZqpH6PyvTb3WqSMYmPrg89KN9NfkeDQzO77', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOWVBR0U2U0pPUk5hOXFSSnZKenZ3dGhmNWpzend4ZWRRaGRwQkFDYSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9wZW5qdWFsYW4udGVzdC9rYXNpciI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760327522),
-('n83EA2t1CyyFzYYvdG2giiDaRVW7tcUvaJz0KCBE', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiR1M3RlJ1SlY0TTV2b21NNDZiRmpmSHVabTV0TENDRVJqZEc2N0VBMyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9wZW5qdWFsYW4udGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760256557),
-('Nkz4xl9Che5ggmTN7G9tIr5RHxxfPlYm1uKwGBnO', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOEdNZTBSV0E2UlQ1RHRXeEFGaDVqV0xCd1BBcHB4STY4WklQYjhzcyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9wZW5qdWFsYW4udGVzdC9rYXNpciI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1760328077);
+('PzrjhvBowqCvSuRg9uORvkwbIm6GV64XYQYgVVUO', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNXk2VFdDWlVsYzJDRWZDUThvbDNBMGFrcFNSVmNjOGNZYlhZMDB2MiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9wZW5qdWFsYW4udGVzdC9sb2dpbiI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1760671977);
 
 -- --------------------------------------------------------
 
@@ -212,28 +215,40 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 CREATE TABLE `transactions` (
   `id` bigint UNSIGNED NOT NULL,
   `invoice` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `total` decimal(12,2) NOT NULL,
   `payment` decimal(12,2) NOT NULL,
   `change_amount` decimal(12,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `subtotal` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `tax` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `discount` decimal(12,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transactions`
 --
 
-INSERT INTO `transactions` (`id`, `invoice`, `total`, `payment`, `change_amount`, `created_at`, `updated_at`) VALUES
-(1, 'INV-1760254507', 20000.00, 50000.00, 30000.00, '2025-10-12 00:35:07', '2025-10-12 00:35:07'),
-(2, 'INV-1760255227', 10000.00, 15000.00, 5000.00, '2025-10-12 00:47:07', '2025-10-12 00:47:07'),
-(3, 'INV-1760255308', 10000.00, 15000.00, 5000.00, '2025-10-12 00:48:28', '2025-10-12 00:48:28'),
-(4, 'INV-1760330120', 60000.00, 10000.00, -50000.00, '2025-10-12 21:35:20', '2025-10-12 21:35:20'),
-(5, 'INV-1760331774', 14000.00, 15000.00, 1000.00, '2025-10-12 22:02:54', '2025-10-12 22:02:54'),
-(6, 'INV-1760331809', 20000.00, 20000.00, 0.00, '2025-10-12 22:03:29', '2025-10-12 22:03:29'),
-(7, 'INV-1760332096', 20000.00, 20000.00, 0.00, '2025-10-12 22:08:16', '2025-10-12 22:08:16'),
-(8, 'INV-1760332428', 20000.00, 20000.00, 0.00, '2025-10-12 22:13:48', '2025-10-12 22:13:48'),
-(9, 'INV-1760332512', 30000.00, 50000.00, 20000.00, '2025-10-12 22:15:12', '2025-10-12 22:15:12'),
-(10, 'INV-1760333544', 20000.00, 20000.00, 0.00, '2025-10-12 22:32:24', '2025-10-12 22:32:24');
+INSERT INTO `transactions` (`id`, `invoice`, `customer_name`, `total`, `payment`, `change_amount`, `created_at`, `updated_at`, `subtotal`, `tax`, `discount`) VALUES
+(1, 'INV-1760254507', NULL, 20000.00, 50000.00, 30000.00, '2025-10-12 00:35:07', '2025-10-12 00:35:07', 0.00, 0.00, 0.00),
+(2, 'INV-1760255227', NULL, 10000.00, 15000.00, 5000.00, '2025-10-12 00:47:07', '2025-10-12 00:47:07', 0.00, 0.00, 0.00),
+(3, 'INV-1760255308', NULL, 10000.00, 15000.00, 5000.00, '2025-10-12 00:48:28', '2025-10-12 00:48:28', 0.00, 0.00, 0.00),
+(4, 'INV-1760330120', NULL, 60000.00, 10000.00, -50000.00, '2025-10-12 21:35:20', '2025-10-12 21:35:20', 0.00, 0.00, 0.00),
+(5, 'INV-1760331774', NULL, 14000.00, 15000.00, 1000.00, '2025-10-12 22:02:54', '2025-10-12 22:02:54', 0.00, 0.00, 0.00),
+(6, 'INV-1760331809', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:03:29', '2025-10-12 22:03:29', 0.00, 0.00, 0.00),
+(7, 'INV-1760332096', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:08:16', '2025-10-12 22:08:16', 0.00, 0.00, 0.00),
+(8, 'INV-1760332428', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:13:48', '2025-10-12 22:13:48', 0.00, 0.00, 0.00),
+(9, 'INV-1760332512', NULL, 30000.00, 50000.00, 20000.00, '2025-10-12 22:15:12', '2025-10-12 22:15:12', 0.00, 0.00, 0.00),
+(10, 'INV-1760333544', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:32:24', '2025-10-12 22:32:24', 0.00, 0.00, 0.00),
+(11, 'INV-1760585766', NULL, 100000.00, 100000.00, 0.00, '2025-10-15 20:36:06', '2025-10-15 20:36:06', 0.00, 0.00, 0.00),
+(12, 'INV-1760779682', NULL, 305000.00, 500000.00, 195000.00, '2025-10-18 02:28:02', '2025-10-18 02:28:02', 0.00, 0.00, 0.00),
+(13, 'INV-1761015598', NULL, 344090.00, 400000.00, 55910.00, '2025-10-20 19:59:58', '2025-10-20 19:59:58', 0.00, 0.00, 0.00),
+(14, 'INV-1761015886', NULL, 433990.00, 500000.00, 66010.00, '2025-10-20 20:04:46', '2025-10-20 20:04:46', 391000.00, 43010.00, 20.00),
+(15, 'INV-1761016964', NULL, 61000.00, 70000.00, 9000.00, '2025-10-20 20:22:44', '2025-10-20 20:22:44', 100000.00, 11000.00, 50000.00),
+(16, 'INV-1761104448', NULL, 90000.00, 100000.00, 10000.00, '2025-10-21 20:40:48', '2025-10-21 20:40:48', 90000.00, 0.00, 0.00),
+(17, 'INV-1761285712', NULL, 89910.00, 100000.00, 10090.00, '2025-10-23 23:01:52', '2025-10-23 23:01:52', 81000.00, 8910.00, 0.00),
+(18, 'INV-1761701746', 'Jojo', 149850.00, 150000.00, 150.00, '2025-10-28 18:35:46', '2025-10-28 18:35:46', 135000.00, 14850.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -257,15 +272,10 @@ CREATE TABLE `transaction_details` (
 --
 
 INSERT INTO `transaction_details` (`id`, `transaction_id`, `product_id`, `qty`, `price`, `subtotal`, `created_at`, `updated_at`) VALUES
-(1, 3, 11, 1, 10000.00, 10000.00, '2025-10-12 00:48:28', '2025-10-12 00:48:28'),
-(2, 4, 11, 2, 10000.00, 20000.00, '2025-10-12 21:35:20', '2025-10-12 21:35:20'),
-(3, 4, 12, 2, 20000.00, 40000.00, '2025-10-12 21:35:21', '2025-10-12 21:35:21'),
-(4, 5, 15, 1, 14000.00, 14000.00, '2025-10-12 22:02:55', '2025-10-12 22:02:55'),
-(5, 6, 13, 1, 20000.00, 20000.00, '2025-10-12 22:03:29', '2025-10-12 22:03:29'),
-(6, 7, 12, 1, 20000.00, 20000.00, '2025-10-12 22:08:16', '2025-10-12 22:08:16'),
-(7, 8, 12, 1, 20000.00, 20000.00, '2025-10-12 22:13:48', '2025-10-12 22:13:48'),
-(8, 9, 11, 3, 10000.00, 30000.00, '2025-10-12 22:15:13', '2025-10-12 22:15:13'),
-(9, 10, 12, 1, 20000.00, 20000.00, '2025-10-12 22:32:25', '2025-10-12 22:32:25');
+(25, 16, 17, 2, 45000.00, 90000.00, '2025-10-21 20:40:48', '2025-10-21 20:40:48'),
+(26, 17, 17, 1, 45000.00, 45000.00, '2025-10-23 23:01:52', '2025-10-23 23:01:52'),
+(27, 17, 18, 1, 36000.00, 36000.00, '2025-10-23 23:01:52', '2025-10-23 23:01:52'),
+(28, 18, 17, 3, 45000.00, 135000.00, '2025-10-28 18:35:46', '2025-10-28 18:35:46');
 
 -- --------------------------------------------------------
 
@@ -278,10 +288,23 @@ CREATE TABLE `users` (
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('admin','kasir') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'kasir',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'kasir',
+  `session_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_login_ip` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_login_at` timestamp NULL DEFAULT NULL,
+  `current_device` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_activity` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`, `role`, `session_id`, `last_login_ip`, `last_login_at`, `current_device`, `last_activity`) VALUES
+(1, 'Gregorius Joses Davin Oemar', 'admin@admin.com', '$2y$12$WCogR6Ge1PZmL.Ib572sPOqeGy9Fl5ZbFEHXqQdBWPAJC6TddCvQm', '2025-10-15 21:32:26', '2025-10-28 18:44:33', 'admin', NULL, '127.0.0.1', '2025-10-28 18:32:15', NULL, NULL),
+(2, 'Rafael Aria Oemar', 'kasir@kasir.com', '$2y$12$BCnP.V9NJkc6xImY4c0mnOqccYSyTlziGmuS.HnLoJEeOuzK2yYjC', '2025-10-15 21:32:27', '2025-10-27 17:48:30', 'kasir', NULL, '127.0.0.1', '2025-10-27 17:48:21', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -365,7 +388,8 @@ ALTER TABLE `transaction_details`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD UNIQUE KEY `users_session_id_unique` (`session_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -375,7 +399,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -393,31 +417,31 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `transaction_details`
 --
 ALTER TABLE `transaction_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

@@ -3,79 +3,69 @@
 @section('title', 'Data Barang')
 
 @section('content')
-<div>
-    <div class="row">
-        <div>
-            <div>
+<div class="container mt-4">
+
+    {{-- 🔍 Search dan Jumlah per halaman --}}
+    <div class="d-flex justify-content-between mb-3">
+        @if(auth()->user()->role == 'admin')
+        <a href="{{ route('products.create') }}" class="btn btn-md btn-primary mb-3">+ Tambah Barang Baru</a>
+        @endif
+        <input type="text" id="searchProduct" class="form-control w-50" placeholder="Cari nama barang..." value="{{ request('search') }}">
+
+        <form method="GET" action="{{ route('products.index') }}" id="perPageForm">
+            <label class="me-2">Tampilkan:</label>
+            <select name="per_page" id="per_page" class="form-select d-inline-block" style="width: auto;" onchange="document.getElementById('perPageForm').submit()">
+                <option value="8" {{ $perPage == 8 ? 'selected' : '' }}>8</option>
+                <option value="12" {{ $perPage == 12 ? 'selected' : '' }}>12</option>
+                <option value="16" {{ $perPage == 16 ? 'selected' : '' }}>16</option>
+                <option value="24" {{ $perPage == 24 ? 'selected' : '' }}>24</option>
+            </select>
+        </form>
+    </div>
+
+    {{-- 🧩 Daftar Produk --}}
+    <div class="row" id="productList">
+        @foreach($products as $p)
+        <div class="col-md-3 col-sm-6 mb-4 product-item">
+            <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
-                    <a href="{{ route('products.create') }}" class="btn btn-md btn-success mb-3">Tambah Barang Baru</a>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">NO</th>
-                                <th scope="col" class="text-center">GAMBAR</th>
-                                <th scope="col" class="text-center">NAMA</th>
-                                <th scope="col" class="text-center">KATEGORI</th>
-                                <th scope="col" class="text-center">HARGA</th>
-                                <th scope="col" class="text-center">STOK</th>
-                                <th scope="col" style="width: 20%" class="text-center">AKSI</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($products as $product)
-                            <tr>
-                                <td>{{ ($products->firstitem() ?? 0) + $loop->index}}</td>
-                                <td class="text-center">
-                                    <img src="{{ asset('/storage/products/'.$product->image) }}" class="rounded" alt="{{ $product->nama }}" style="width: 80px; height: 80px; object-fit: cover;">
-                                </td>
-                                <td>{{ $product->name }}</td>
-                                <td>{{ $product->category->name ?? '-' }}</td>
-                                <td>{{ "Rp " . number_format($product->price,2,',','.') }}</td>
-                                <td>{{ $product->stock }}</td>
-                                <td class="text-center">
-                                    <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('products.destroy', $product->id) }}" method="POST">
-                                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-dark">LIHAT</a>
-                                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary">UBAH</a>
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @empty
-                            <div class="alert alert-danger">
-                                Waduh Data Barang Belum Ada !!!, Klik Tambah Barang Baru Untuk Tambah Barang.
-                            </div>
-                            @endforelse
-                        </tbody>
-                    </table>
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $products->links() }}
+                    <img src="{{ asset('storage/products/'.$p->image) }}" class="mb-3" style="width: 80px; height: 80px; object-fit: cover;">
+                    <h6 class="product-name">{{ $p->name }}</h6>
+                    <p class="text-muted mb-1">Rp {{ number_format($p->final_price, 0, ',', '.') }}</p>
+                    <p class="text-muted mb-1">Stok : {{ $p->stock }}</p>
+                    <div class="d-flex justify-content-center mt-2">
+                        <a href="{{ route('products.show', $p->id) }}" class="btn btn-secondary btn-sm me-1">LIHAT</a>
+                        @if(auth()->user()->role == 'admin')
+                        <a href="{{ route('products.edit', $p->id) }}" class="btn btn-primary btn-sm me-1">EDIT</a>
+                        <form action="{{ route('products.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm">HAPUS</button>
+                        </form>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
+        @endforeach
+    </div>
+
+    {{-- 🔢 Pagination --}}
+    <div class="d-flex justify-content-center mt-4">
+        {{ $products->links() }}
     </div>
 </div>
 
+{{-- 🔎 Script pencarian realtime --}}
 <script>
-    //message with sweetalert
-    @if(session('success'))
-    Swal.fire({
-        icon: "success",
-        title: "BERHASIL",
-        text: "{{ session('success') }}",
-        showConfirmButton: false,
-        timer: 2000
+    document.getElementById('searchProduct').addEventListener('keyup', function() {
+        const searchText = this.value.toLowerCase();
+        const products = document.querySelectorAll('#productList .product-item');
+
+        products.forEach(product => {
+            const name = product.querySelector('.product-name').textContent.toLowerCase();
+            product.style.display = name.includes(searchText) ? '' : 'none';
+        });
     });
-    @elseif(session('error'))
-    Swal.fire({
-        icon: "error",
-        title: "GAGAL!",
-        text: "{{ session('error') }}",
-        showConfirmButton: false,
-        timer: 2000
-    });
-    @endif
 </script>
 @endsection

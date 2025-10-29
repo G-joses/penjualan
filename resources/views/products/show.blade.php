@@ -9,7 +9,7 @@
         <div>
             <div>
                 <div class="card-body">
-                    <a href="{{ route('products.index') }}" class="btn btn-md btn-primary mb-3">Kembali</a>
+                    <a href="{{ route('products.index') }}" class="btn btn-md btn-primary mb-3">KEMBALI</a>
                 </div>
             </div>
         </div>
