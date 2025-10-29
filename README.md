@@ -83,7 +83,7 @@ Sistem Point of Sale (POS) yang dikembangkan dengan **Laravel 12** untuk manajem
 - Web server (Apache/Nginx)
 - Extension PHP: BCMath, Ctype, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
 
-<p align="right"> Dibuat dengan Deepseek</p>
+<p align="right"> Teks di atas di buat ulang dengan Deepseek</p>
 
 
 
