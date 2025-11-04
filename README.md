@@ -1,66 +1,90 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h1 align="center">📊 Sistem Point of Sale (POS) - Laravel</h1>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <strong>Sistem Point of Sale sederhana untuk manajemen penjualan dan inventori toko</strong>
 </p>
 
-## About Laravel
+<p align="center">
+  <a href="#tentang-projek">Tentang</a> •
+  <a href="#fitur-utama">Fitur</a> •
+  <a href="#teknologi">Teknologi</a> •
+  <a href="#instalasi">Instalasi</a> •
+  <a href="#penggunaan">Penggunaan</a>
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tentang Projek
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistem Point of Sale (POS) yang dikembangkan dengan **Laravel 12** untuk manajemen penjualan dan inventori toko modern. Aplikasi ini menyediakan solusi lengkap untuk mengelola transaksi penjualan, stok barang, laporan keuangan, dan multi-user dengan hak akses terpisah.
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Fitur Utama
 
-## Learning Laravel
+### 👥 Multi-Login System
+- **Admin** - Akses penuh ke semua menu dan fitur
+- **Kasir** - Akses terbatas ke menu kasir, view data barang, dan edit profil sendiri
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📊 Dashboard Komprehensif
+- 📈 8 kartu statistik real-time (barang, kategori, user, transaksi, pendapatan)
+- ⚡ Quick actions untuk akses cepat
+- 📊 Grafik penjualan tahunan
+- 🏆 5 produk terlaris
+- ⚠️ Monitoring stok menipis
+- 🔄 Transaksi terbaru
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🏷️ Manajemen Produk
+- ➕ CRUD data barang lengkap
+- 📁 Kategori produk terorganisir
+- 🖼️ Upload gambar produk
+- 💰 Sistem diskon fleksibel
+- 🔔 Peringatan stok rendah
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 💰 Modul Kasir
+- 🎯 Interface kasir yang user-friendly
+- 🛒 Tambah barang ke keranjang
+- 🧮 Perhitungan otomatis (pajak, diskon, total)
+- 💵 Kembalian otomatis
+- 🖨️ Cetak struk transaksi
 
-## Laravel Sponsors
+### 📈 Laporan & Transaksi
+- 📅 Laporan penjualan per bulan
+- 🔍 Filter transaksi berdasarkan tanggal
+- 🗑️ Hapus transaksi massal (dengan safety check)
+- 📄 Cetak laporan bulanan
+- 📋 Export struk transaksi
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 👤 Manajemen User
+- 👥 CRUD user oleh admin
+- ✏️ Edit profil sendiri
+- 🔒 Keamanan session management
 
-### Premium Partners
+## 🛠️ Teknologi yang Digunakan
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+| Category | Technologies |
+|----------|--------------|
+| **Backend** | Laravel 12, PHP 8.3+ |
+| **Frontend** | Bootstrap, JavaScript, HTML5, CSS3 |
+| **Database** | MySQL |
+| **Authentication** | Laravel Auth dengan session management |
+| **Security** | CSRF protection, XSS protection, SQL injection prevention |
 
-## Contributing
+## 🔐 Fitur Keamanan
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- 🔑 Multi-level authentication
+- ⏱️ Session management dengan auto-logout
+- 🛡️ Protection terhadap akses tidak sah
+- ✅ Validasi input data
+- 🗑️ Auto-clear session expired
 
-## Code of Conduct
+## 📋 Persyaratan Sistem
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- PHP 8.3+
+- Composer 2.0+
+- MySQL 5.7+ atau 8.0+
+- Web server (Apache/Nginx)
+- Extension PHP: BCMath, Ctype, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
 
-## Security Vulnerabilities
+<p align="right"> Teks di atas di buat ulang dengan Deepseek</p>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
