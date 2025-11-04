@@ -24,19 +24,49 @@ class ProductController extends Controller
     {
         $keyword = $request->input('search');
         $perPage = $request->input('per_page', 8); // default 8 produk per halaman
+        $priceSort = $request->input('price_sort');
+        $category = $request->input('category', '');
+        $stockSort = $request->input('stock_sort');
 
-        $query = Product::query();
+        $query = Product::query()->with('category');
 
+        // cari barang
         if ($keyword) {
             $query->where('name', 'like', "%{$keyword}%");
         }
 
+        // filter berdasarkan kategori
+        if ($category) {
+            $query->where('category_id', $category);
+        }
+
+        // filter berdasarkan harga
+        if ($priceSort) {
+            $query->orderBy('final_price', $priceSort === 'price_high' ? 'desc' : 'asc');
+        }
+
+        // filter berdasarkan stok
+        if ($stockSort) {
+            $query->orderBy('stock', $stockSort === 'stock_high' ? 'desc' : 'asc');
+        }
+
+        // default filter
+        if (!$priceSort && !$stockSort) {
+            $query->orderBy('name', 'asc');
+        }
         $products = $query->paginate($perPage);
+        $categories = Category::all();
 
         // agar pagination tetap membawa parameter search dan per_page
-        $products->appends(['search' => $keyword, 'per_page' => $perPage]);
+        $products->appends([
+            'search' => $keyword,
+            'per_page' => $perPage,
+            'price_sort' => $priceSort,
+            'category' => $category,
+            'stock_sort' => $stockSort
+        ]);
 
-        return view('products.index', compact('products', 'keyword', 'perPage'));
+        return view('products.index', compact('products', 'keyword', 'perPage', 'categories', 'priceSort', 'category', 'stockSort'));
     }
 
     /**
