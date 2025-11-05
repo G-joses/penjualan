@@ -7,6 +7,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,9 +31,11 @@ class LaporanController extends Controller
         }
 
         $transactions = $query->with('details.product')->orderBy('created_at', 'desc')->get();
+
         if (Auth::user()->role !== 'admin') {
             abort(403, 'Akses ditolak');
         }
+
         return view('laporan.index', compact('transactions', 'from', 'to'));
     }
 
@@ -125,9 +128,11 @@ class LaporanController extends Controller
         ]);
 
         $namaFile = 'Laporan-Penjualan-' . $namaBulan . '.pdf';
+
         if (Auth::user()->role !== 'admin') {
             abort(403, 'Akses ditolak');
         }
+
         return $pdf->setPaper('a4', 'landscape')->download($namaFile);
     }
 
@@ -139,9 +144,11 @@ class LaporanController extends Controller
      */
     public function hapusBulanan(Request $request)
     {
+        // PERBAIKAN: Validasi yang benar
         $request->validate([
-            'required|date_format:Y-m'
+            'bulan' => 'required|date_format:Y-m'
         ]);
+
         $bulan = $request->bulan;
         $currentMonth = now()->format('Y-m');
 
@@ -149,22 +156,22 @@ class LaporanController extends Controller
         if ($bulan === $currentMonth) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tidak Bisa hapus Trensaksi Bulan Ini !'
+                'message' => 'Tidak bisa menghapus transaksi bulan ini!'
             ], 422);
         }
 
-        // validasi tidak boleh hapus trnasaki bulan depan
+        // validasi tidak boleh hapus transaksi bulan depan
         if ($bulan > $currentMonth) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bulan Depan Belum Jalan ! Buat Apa Dihapus ?'
+                'message' => 'Bulan depan belum berjalan! Buat apa dihapus?'
             ], 422);
         }
 
         try {
             DB::beginTransaction();
 
-            // ambil transaki yang mau dihapus
+            // ambil transaksi yang mau dihapus
             $transactions = Transaction::whereYear('created_at', substr($bulan, 0, 4))
                 ->whereMonth('created_at', substr($bulan, 5, 2))
                 ->get();
@@ -174,7 +181,7 @@ class LaporanController extends Controller
             if ($jumlahTransaksi === 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Tidak Ada Transaki Pada Bulan Yang Dipilih !'
+                    'message' => 'Tidak ada transaksi pada bulan yang dipilih!'
                 ], 422);
             }
 
@@ -182,23 +189,26 @@ class LaporanController extends Controller
             foreach ($transactions as $transaction) {
                 foreach ($transaction->details as $detail) {
                     // kembalikan stok produk
-                    $detail->product->increment('stock', $detail->qty);
+                    if ($detail->product) {
+                        $detail->product->increment('stock', $detail->qty);
+                    }
                 }
             }
 
+            // PERBAIKAN: Gunakan pluck yang benar
+            $transactionIds = $transactions->pluck('id')->toArray();
+
             // Hapus transaction_details terlebih dahulu (foreign key constraint)
-            TransactionDetail::whereIn('transaction_id', $transaction->pluck('id'))->delete();
+            TransactionDetail::whereIn('transaction_id', $transactionIds)->delete();
 
             // Hapus transactions
-            $transactions = Transaction::whereYear('created_at', substr($bulan, 0, 4))
-                ->whereMonth('created_at', substr($bulan, 5, 2))
-                ->delete();
+            Transaction::whereIn('id', $transactionIds)->delete();
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => "Berhasil Mengapus $jumlahTransaksi transaksi pada bulan" . $this->formatBulanIndonesia($bulan),
+                'message' => "Berhasil menghapus $jumlahTransaksi transaksi pada bulan " . $this->formatBulanIndonesia($bulan),
                 'deleted_count' => $jumlahTransaksi
             ]);
         } catch (\Exception $e) {
@@ -206,11 +216,8 @@ class LaporanController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi Kesalahan Saat Hapus Transaksi' . $e->getMessage()
+                'message' => 'Terjadi kesalahan saat menghapus transaksi: ' . $e->getMessage()
             ], 500);
-        }
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Akses ditolak');
         }
     }
 
@@ -238,9 +245,9 @@ class LaporanController extends Controller
         ];
 
         $tahun = substr($bulan, 0, 4);
-        $bulan = substr($bulan, 5, 2);
+        $bulanNum = substr($bulan, 5, 2);
 
-        return $bulanIndonesia[$bulan] . ' ' . $tahun;
+        return $bulanIndonesia[$bulanNum] . ' ' . $tahun;
     }
 
     /**
@@ -263,19 +270,20 @@ class LaporanController extends Controller
             return response()->json([
                 'success' => false,
                 'is_current_month' => true,
-                'message' => 'Bulan Berjalan Tidak Dapat Dihapus'
+                'message' => 'Bulan berjalan tidak dapat dihapus'
             ]);
         }
 
-        $transaction = Transaction::whereYear('created_at', substr($bulan, 0, 4))
+        // PERBAIKAN: Variable name yang konsisten
+        $transactions = Transaction::whereYear('created_at', substr($bulan, 0, 4))
             ->whereMonth('created_at', substr($bulan, 5, 2))
             ->with('details')
             ->get();
 
-        $static = [
-            'total_transaksi' => $transaction->count(),
-            'total_pendapatan' => $transaction->sum('total'),
-            'total_item_terjual' => $transaction->sum(function ($transaction) {
+        $statistik = [
+            'total_transaksi' => $transactions->count(),
+            'total_pendapatan' => $transactions->sum('total'),
+            'total_item_terjual' => $transactions->sum(function ($transaction) {
                 return $transaction->details->sum('qty');
             }),
             'periode' => $this->formatBulanIndonesia($bulan),

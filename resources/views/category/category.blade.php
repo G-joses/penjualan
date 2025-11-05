@@ -35,7 +35,7 @@
                             </tr>
                             @empty
                             <div class="alert alert-danger">
-                                Waduh Data Kategori Belum Ada !!!, Klik Tambah Barang Baru Untuk Tambah Kategori.
+                                Waduh Data Kategori Belum Ada !!!, Klik Tambah Kategori Baru Untuk Tambah Kategori.
                             </div>
                             @endforelse
                         </tbody>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 29, 2025 at 01:44 AM
+-- Generation Time: Nov 05, 2025 at 02:29 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -58,14 +58,6 @@ CREATE TABLE `categories` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `categories`
---
-
-INSERT INTO `categories` (`id`, `name`, `description`, `created_at`, `updated_at`) VALUES
-(2, 'Desain', '<p>Barang-barang yang termasuk desain grafis 1</p>', '2025-10-09 20:43:53', '2025-10-09 21:53:29'),
-(3, 'Fotografi', '<p>Hasil Jepretan kamera atau kamera hp</p>', '2025-10-10 23:56:06', '2025-10-10 23:56:06');
 
 -- --------------------------------------------------------
 
@@ -175,15 +167,6 @@ CREATE TABLE `products` (
   `final_price` decimal(12,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `category_id`, `image`, `name`, `description`, `price`, `stock`, `created_at`, `updated_at`, `discount`, `discount_amount`, `has_discount`, `final_price`) VALUES
-(17, 2, '2KPALj8HSne8w6uOvZtxAhzYDGebPX2CpCzHA1im.png', 'Infografik', '<p>infografik yang menampilkan informasi&nbsp;</p>', 50000.00, 94, '2025-10-21 19:34:47', '2025-10-28 18:35:46', 10.00, 0.00, 1, 45000.00),
-(18, 2, 'sUM7qnjqDhoPoVZHSBniEDidvZiZVO4bSyfnY7n9.png', 'Logo 1', '<p>logo punya fael</p>', 40000.00, 99, '2025-10-21 19:36:58', '2025-10-23 23:01:52', 10.00, 0.00, 1, 36000.00),
-(19, 2, 'k2QuwiT34BqrY3BhWyz3GdB2Bf5Wy9GW2haZzg7r.png', 'logo G', '<p>asdasdasdasd</p>', 1000000.00, 100, '2025-10-21 20:12:18', '2025-10-21 20:12:48', 0.00, 0.00, 0, 1000000.00);
-
 -- --------------------------------------------------------
 
 --
@@ -226,30 +209,6 @@ CREATE TABLE `transactions` (
   `discount` decimal(12,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `invoice`, `customer_name`, `total`, `payment`, `change_amount`, `created_at`, `updated_at`, `subtotal`, `tax`, `discount`) VALUES
-(1, 'INV-1760254507', NULL, 20000.00, 50000.00, 30000.00, '2025-10-12 00:35:07', '2025-10-12 00:35:07', 0.00, 0.00, 0.00),
-(2, 'INV-1760255227', NULL, 10000.00, 15000.00, 5000.00, '2025-10-12 00:47:07', '2025-10-12 00:47:07', 0.00, 0.00, 0.00),
-(3, 'INV-1760255308', NULL, 10000.00, 15000.00, 5000.00, '2025-10-12 00:48:28', '2025-10-12 00:48:28', 0.00, 0.00, 0.00),
-(4, 'INV-1760330120', NULL, 60000.00, 10000.00, -50000.00, '2025-10-12 21:35:20', '2025-10-12 21:35:20', 0.00, 0.00, 0.00),
-(5, 'INV-1760331774', NULL, 14000.00, 15000.00, 1000.00, '2025-10-12 22:02:54', '2025-10-12 22:02:54', 0.00, 0.00, 0.00),
-(6, 'INV-1760331809', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:03:29', '2025-10-12 22:03:29', 0.00, 0.00, 0.00),
-(7, 'INV-1760332096', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:08:16', '2025-10-12 22:08:16', 0.00, 0.00, 0.00),
-(8, 'INV-1760332428', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:13:48', '2025-10-12 22:13:48', 0.00, 0.00, 0.00),
-(9, 'INV-1760332512', NULL, 30000.00, 50000.00, 20000.00, '2025-10-12 22:15:12', '2025-10-12 22:15:12', 0.00, 0.00, 0.00),
-(10, 'INV-1760333544', NULL, 20000.00, 20000.00, 0.00, '2025-10-12 22:32:24', '2025-10-12 22:32:24', 0.00, 0.00, 0.00),
-(11, 'INV-1760585766', NULL, 100000.00, 100000.00, 0.00, '2025-10-15 20:36:06', '2025-10-15 20:36:06', 0.00, 0.00, 0.00),
-(12, 'INV-1760779682', NULL, 305000.00, 500000.00, 195000.00, '2025-10-18 02:28:02', '2025-10-18 02:28:02', 0.00, 0.00, 0.00),
-(13, 'INV-1761015598', NULL, 344090.00, 400000.00, 55910.00, '2025-10-20 19:59:58', '2025-10-20 19:59:58', 0.00, 0.00, 0.00),
-(14, 'INV-1761015886', NULL, 433990.00, 500000.00, 66010.00, '2025-10-20 20:04:46', '2025-10-20 20:04:46', 391000.00, 43010.00, 20.00),
-(15, 'INV-1761016964', NULL, 61000.00, 70000.00, 9000.00, '2025-10-20 20:22:44', '2025-10-20 20:22:44', 100000.00, 11000.00, 50000.00),
-(16, 'INV-1761104448', NULL, 90000.00, 100000.00, 10000.00, '2025-10-21 20:40:48', '2025-10-21 20:40:48', 90000.00, 0.00, 0.00),
-(17, 'INV-1761285712', NULL, 89910.00, 100000.00, 10090.00, '2025-10-23 23:01:52', '2025-10-23 23:01:52', 81000.00, 8910.00, 0.00),
-(18, 'INV-1761701746', 'Jojo', 149850.00, 150000.00, 150.00, '2025-10-28 18:35:46', '2025-10-28 18:35:46', 135000.00, 14850.00, 0.00);
-
 -- --------------------------------------------------------
 
 --
@@ -266,16 +225,6 @@ CREATE TABLE `transaction_details` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `transaction_details`
---
-
-INSERT INTO `transaction_details` (`id`, `transaction_id`, `product_id`, `qty`, `price`, `subtotal`, `created_at`, `updated_at`) VALUES
-(25, 16, 17, 2, 45000.00, 90000.00, '2025-10-21 20:40:48', '2025-10-21 20:40:48'),
-(26, 17, 17, 1, 45000.00, 45000.00, '2025-10-23 23:01:52', '2025-10-23 23:01:52'),
-(27, 17, 18, 1, 36000.00, 36000.00, '2025-10-23 23:01:52', '2025-10-23 23:01:52'),
-(28, 18, 17, 3, 45000.00, 135000.00, '2025-10-28 18:35:46', '2025-10-28 18:35:46');
 
 -- --------------------------------------------------------
 
@@ -303,8 +252,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `updated_at`, `role`, `session_id`, `last_login_ip`, `last_login_at`, `current_device`, `last_activity`) VALUES
-(1, 'Gregorius Joses Davin Oemar', 'admin@admin.com', '$2y$12$WCogR6Ge1PZmL.Ib572sPOqeGy9Fl5ZbFEHXqQdBWPAJC6TddCvQm', '2025-10-15 21:32:26', '2025-10-28 18:44:33', 'admin', NULL, '127.0.0.1', '2025-10-28 18:32:15', NULL, NULL),
-(2, 'Rafael Aria Oemar', 'kasir@kasir.com', '$2y$12$BCnP.V9NJkc6xImY4c0mnOqccYSyTlziGmuS.HnLoJEeOuzK2yYjC', '2025-10-15 21:32:27', '2025-10-27 17:48:30', 'kasir', NULL, '127.0.0.1', '2025-10-27 17:48:21', NULL, NULL);
+(1, 'Mas admin', 'admin@admin.com', '$2y$12$WCogR6Ge1PZmL.Ib572sPOqeGy9Fl5ZbFEHXqQdBWPAJC6TddCvQm', '2025-10-15 21:32:26', '2025-11-04 19:28:08', 'admin', NULL, '127.0.0.1', '2025-11-04 19:20:42', NULL, NULL),
+(2, 'Mbak kasir', 'kasir@kasir.com', '$2y$12$BCnP.V9NJkc6xImY4c0mnOqccYSyTlziGmuS.HnLoJEeOuzK2yYjC', '2025-10-15 21:32:27', '2025-11-04 19:25:55', 'kasir', NULL, '127.0.0.1', '2025-11-04 18:46:03', NULL, NULL);
 
 --
 -- Indexes for dumped tables

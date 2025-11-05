@@ -29,7 +29,6 @@
         <div class="card-body">
             <form id="form-hapus-bulanan" class="row g-3">
                 @csrf
-                @method('DELETE')
                 <div class="col-md-4">
                     <label for="bulan_hapus" class="form-label">Pilih Bulan yang Akan Dihapus</label>
                     <input type="month" id="bulan_hapus" name="bulan" class="form-control"
@@ -44,7 +43,7 @@
                     <button type="button" id="btn-check-bulan" class="btn btn-warning">
                         <i class="bi bi-search"></i> Cek Data
                     </button>
-                    <button type="submit" id="btn-hapus-bulan" class="btn btn-danger" disabled>
+                    <button type="button" id="btn-hapus-bulan" class="btn btn-danger" disabled>
                         <i class="bi bi-trash"></i> Hapus Transaksi
                     </button>
                 </div>
@@ -111,7 +110,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="4" class="text-center">Tidak ada data</td>
+                <td colspan="5" class="text-center">Tidak ada data</td>
             </tr>
             @endforelse
         </tbody>
@@ -120,32 +119,32 @@
 </div>
 
 <!-- Modal Konfirmasi Hapus -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                    <i class="bi bi-exclamation-triangle"></i> Konfirmasi Hapus Transaksi
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" data-bs-backdrop="false>
+    <div class=" modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">
+                <i class="bi bi-exclamation-triangle"></i> Konfirmasi Hapus Transaksi
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p>Anda akan menghapus semua transaksi pada:</p>
+            <div class="alert alert-warning">
+                <strong id="modal-periode"></strong>
             </div>
-            <div class="modal-body">
-                <p>Anda akan menghapus semua transaksi pada:</p>
-                <div class="alert alert-warning">
-                    <strong id="modal-periode"></strong>
-                </div>
-                <div id="modal-statistik"></div>
-                <p class="text-danger fw-bold">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    Tindakan ini tidak dapat dibatalkan! Stok produk akan dikembalikan.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" id="confirm-delete-btn" class="btn btn-danger">Ya, Hapus Transaksi</button>
-            </div>
+            <div id="modal-statistik"></div>
+            <p class="text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle"></i>
+                Tindakan ini tidak dapat dibatalkan! Stok produk akan dikembalikan.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="button" id="confirm-delete-btn" class="btn btn-danger">Ya, Hapus Transaksi</button>
         </div>
     </div>
+</div>
 </div>
 
 <script>
@@ -154,7 +153,6 @@
         const btnCheck = document.getElementById('btn-check-bulan');
         const btnHapus = document.getElementById('btn-hapus-bulan');
         const statistikDiv = document.getElementById('statistik-bulanan');
-        const formHapus = document.getElementById('form-hapus-bulanan');
         const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
         // Cek data bulanan
@@ -170,11 +168,22 @@
             const currentMonth = new Date().toISOString().slice(0, 7);
             if (bulan === currentMonth) {
                 alert('Tidak bisa menghapus transaksi bulan berjalan!');
+                statistikDiv.style.display = 'none';
+                btnHapus.disabled = true;
                 return;
             }
 
+            // Tampilkan loading
+            btnCheck.disabled = true;
+            btnCheck.innerHTML = '<i class="bi bi-hourglass-split"></i> Loading...';
+
             fetch(`/laporan/statistik-bulanan?bulan=${bulan}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         const stat = data.statistik;
@@ -189,13 +198,13 @@
                         // Set data untuk modal
                         document.getElementById('modal-periode').textContent = stat.periode;
                         document.getElementById('modal-statistik').innerHTML = `
-                        <p><strong>Detail yang akan dihapus:</strong></p>
-                        <ul>
-                            <li>Total Transaksi: ${stat.total_transaksi}</li>
-                            <li>Total Pendapatan: Rp ${stat.total_pendapatan.toLocaleString()}</li>
-                            <li>Item Terjual: ${stat.total_item_terjual}</li>
-                        </ul>
-                    `;
+                            <p><strong>Detail yang akan dihapus:</strong></p>
+                            <ul>
+                                <li>Total Transaksi: ${stat.total_transaksi}</li>
+                                <li>Total Pendapatan: Rp ${stat.total_pendapatan.toLocaleString()}</li>
+                                <li>Item Terjual: ${stat.total_item_terjual}</li>
+                            </ul>
+                        `;
                     } else {
                         alert(data.message);
                         statistikDiv.style.display = 'none';
@@ -204,14 +213,17 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan saat mengambil data!');
+                    alert('Terjadi kesalahan saat mengambil data! Periksa console untuk detail.');
+                })
+                .finally(() => {
+                    // Reset button
+                    btnCheck.disabled = false;
+                    btnCheck.innerHTML = '<i class="bi bi-search"></i> Cek Data';
                 });
         });
 
-        // Submit form hapus
-        formHapus.addEventListener('submit', function(e) {
-            e.preventDefault();
-
+        // Tombol hapus klik
+        btnHapus.addEventListener('click', function() {
             const bulan = bulanHapus.value;
             if (!bulan) {
                 alert('Pilih bulan terlebih dahulu!');
@@ -226,6 +238,10 @@
         // Konfirmasi hapus dari modal
         confirmDeleteBtn.addEventListener('click', function() {
             const bulan = bulanHapus.value;
+
+            // Tampilkan loading
+            confirmDeleteBtn.disabled = true;
+            confirmDeleteBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Menghapus...';
 
             fetch('/laporan/hapus-bulanan', {
                     method: 'DELETE',
@@ -252,6 +268,11 @@
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Terjadi kesalahan saat menghapus data!');
+                })
+                .finally(() => {
+                    // Reset button
+                    confirmDeleteBtn.disabled = false;
+                    confirmDeleteBtn.innerHTML = 'Ya, Hapus Transaksi';
                 });
         });
 

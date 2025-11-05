@@ -32,8 +32,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-        Route::get('/laporan/statisik-bulanan', [LaporanController::class, 'getStatistikBulanan'])->name('laporan.statistik-bulanan');
-        Route::delete('/laporan/hapus-bulanan', [LaporanController::class, 'hapusBulanan'])->name('laporan.hapus-bulanan');
+        Route::get('/laporan/statistik-bulanan', [LaporanController::class, 'getStatistikBulan']);
+        Route::delete('/laporan/hapus-bulanan', [LaporanController::class, 'hapusBulanan']);
         Route::post('/users/{id}/force-logout', [UserController::class, 'forceLogout'])
             ->name('users.force-logout')
             ->middleware(['auth', 'role:admin']);
