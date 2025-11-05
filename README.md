@@ -4,14 +4,6 @@
   <strong>Sistem Point of Sale sederhana untuk manajemen penjualan dan inventori toko</strong>
 </p>
 
-<p align="center">
-  <a href="#tentang-projek">Tentang</a> •
-  <a href="#fitur-utama">Fitur</a> •
-  <a href="#teknologi">Teknologi</a> •
-  <a href="#instalasi">Instalasi</a> •
-  <a href="#penggunaan">Penggunaan</a>
-</p>
-
 ## 🚀 Tentang Projek
 
 Sistem Point of Sale (POS) yang dikembangkan dengan **Laravel 12** untuk manajemen penjualan dan inventori toko modern. Aplikasi ini menyediakan solusi lengkap untuk mengelola transaksi penjualan, stok barang, laporan keuangan, dan multi-user dengan hak akses terpisah.
@@ -83,7 +75,15 @@ Sistem Point of Sale (POS) yang dikembangkan dengan **Laravel 12** untuk manajem
 - Web server (Apache/Nginx)
 - Extension PHP: BCMath, Ctype, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
 
+## Akun
+1. admin
+   - email       : admin@admin.com
+   - password    : 12345678
+3. kasir
+   - email       : kasir@kasir.com    
+   - password    : 87654321
 <p align="right"> Teks di atas di buat ulang dengan Deepseek</p>
+
 
 
 
