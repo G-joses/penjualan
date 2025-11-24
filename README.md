@@ -67,13 +67,6 @@ Sistem Point of Sale (POS) yang dikembangkan dengan **Laravel 12** untuk manajem
 - ✅ Validasi input data
 - 🗑️ Auto-clear session expired
 
-## 📋 Persyaratan Sistem
-
-- PHP 8.3+
-- Composer 2.0+
-- MySQL 5.7+ atau 8.0+
-- Web server (Apache/Nginx)
-- Extension PHP: BCMath, Ctype, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
 
 
 
