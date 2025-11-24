@@ -75,14 +75,6 @@ Sistem Point of Sale (POS) yang dikembangkan dengan **Laravel 12** untuk manajem
 - Web server (Apache/Nginx)
 - Extension PHP: BCMath, Ctype, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
 
-## Akun
-1. admin
-   - email       : admin@admin.com
-   - password    : 12345678
-3. kasir
-   - email       : kasir@kasir.com    
-   - password    : 87654321
-<p align="right"> Teks di atas di buat ulang dengan Deepseek</p>
 
 
 
